@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>我们的家 | Damien & Mikann (Pixel Edition)</title>
+
+  <style>
+    /* ===== Soft Blue Theme ===== */
+    body {
+      background-color: #e1f5fe;
+      color: #333;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #e3f2fd;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(100, 181, 246, 0.3);
+    }
+    h1 {
+      color: #1565c0;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    /* ===== Sections (Room Cards) ===== */
+    .section {
+      margin: 20px 0;
+      padding: 15px;
+      border-radius: 8px;
+      background: #bbdefb;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .section:hover {
+      background: #90caf9;
+      transform: scale(1.05);
+    }
+    .section h2 {
+      margin: 0 0 5px;
+      color: #0d47a1; 
+      font-weight: 600;
+    }
+    .section p {
+      margin: 0;
+    }
+
+    /* ===== Buttons ===== */
+    .button {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 15px;
+      background: #64b5f6;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+    }
+    .button:hover {
+      background: #42a5f5; 
+    }
+
+    /* ===== Audio Player ===== */
+    .audio-player {
+      margin-top: 20px;
+    }
+
+    /* ===== Modals (Room, Game) ===== */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; 
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      box-sizing: border-box;
+      z-index: 9999;
+    }
+    .modal-content {
+      background: #e1f5fe;
+      color: #333;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 600px;
+      margin: auto;
+      position: relative;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    .modal-content h2 {
+      margin-top: 0;
+      color: #1565c0;
+    }
+    .modal img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-top: 10px;
+      box-shadow: 0 0 4px rgba(0,0,0,0.1);
+    }
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background: #bbdefb;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 5px 8px;
+      color: #333;
+      font-weight: bold;
+    }
+    .close:hover {
+      background: #90caf9;
+    }
+
+    /* ===== Game Options (Rock-Paper-Scissors) ===== */
+    .game-options {
+      display: flex;
+      justify-content: center;
+      margin: 10px 0;
+    }
+    .game-options button {
+      margin: 0 10px;
+      padding: 10px 15px;
+      cursor: pointer;
+      border-radius: 5px;
+      border: none;
+      font-weight: bold;
+      background-color: #64b5f6;
+      color: #fff;
+      transition: background 0.2s;
+    }
+    .game-options button:hover {
+      background-color: #42a5f5;
+    }
+    .game-result {
+      margin-top: 10px;
+      font-size: 1.2em;
+      color: #0d47a1;
+    }
+
+    /* ===== Avatars + Dress-Up (Pixel Style) ===== */
+    .avatar-container {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .avatar-box {
+      background: #bbdefb;
+      border-radius: 8px;
+      padding: 10px;
+      width: 40%;
+      margin: 10px 0;
+      box-sizing: border-box;
+      min-width: 250px;
+    }
+    .avatar-box h3 {
+      margin: 0 0 10px;
+      color: #0d47a1;
+    }
+    .avatar-img {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 10px auto;
+      display: block;
+      image-rendering: pixelated; /* preserves that chunky pixel look */
+      border: 2px solid #90caf9;
+      border-radius: 4px;
+      box-shadow: 0 0 4px rgba(0,0,0,0.1);
+    }
+    .dressup-buttons {
+      display: flex;
+      justify-content: center;
+    }
+    .dressup-buttons button {
+      margin: 0 5px;
+      padding: 6px 10px;
+      border-radius: 5px;
+      border: none;
+      background-color: #64b5f6;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .dressup-buttons button:hover {
+      background-color: #42a5f5;
+    }
+
+    /* ===== Message Board (localStorage) ===== */
+    .message-board {
+      margin-top: 30px;
+      background: #bbdefb;
+      border-radius: 8px;
+      padding: 15px;
+    }
+    .message-board h2 {
+      color: #0d47a1;
+      margin-top: 0;
+    }
+    .msg-form {
+      margin-bottom: 10px;
+    }
+    .msg-form input, .msg-form textarea {
+      width: 80%;
+      max-width: 400px;
+      padding: 8px;
+      margin-bottom: 6px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .msg-list {
+      text-align: left;
+      max-width: 600px;
+      margin: 0 auto;
+      margin-top: 15px;
+    }
+    .msg-item {
+      background: #e1f5fe;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 10px;
+      word-wrap: break-word;
+    }
+    .msg-author {
+      font-weight: bold;
+      color: #1565c0;
+    }
+    .clear-btn {
+      background: #ef5350;
+      margin-top: 10px;
+    }
+    .clear-btn:hover {
+      background: #e53935;
+    }
+  </style>
+
+  <script>
+    /***************************************************
+     * 1) Pixel Art for Rooms (All are small 16×16 images)
+     ***************************************************/
+    const roomImages = {
+      "主卧 🛏": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAKCAYAAACl3P2AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAALEgAACxIB0t1+/AAAALBJREFUOE+1UK0RgDAMfZfIlITIgDwFXDXWHvFjH2fJkP9Y07/NKS4ScyeKAzlyuZmZ/RmClleCDYK5Xq/EU/RXEX8+yvjgkjUE/o7n48GZr51duUZpDMeCSbTDPbAAAAAElFTkSuQmCC",
+      "客厅 🛋": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAKCAYAAACl3P2AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAALEgAACxIB0t1+/AAAAMhJREFUOE9jZKA2arSZFJpp2M4gGP92h2o9MAZin+Hi0Q1AawxZWygPSB5EewjCI2uEEUG82+Z0QNE/HvCOUSt6D91CISNUcjEhO/hgABBgAuMBMxG6tEp3AAAAABJRU5ErkJggg==",
+      "厨房 & 餐厅 🍽": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAKCAYAAACl3P2AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAALEgAACxIB0t1+/AAAAKZJREFUOE9jZEAFzmyJDZUrVgzW/4f72pZAIxC8GBgY2AgZEBfaEayJe2GP+xK4CizATeH9Rx8xEWzR+gdSggGAJFtMzD/jr5FAAAAABJRU5ErkJggg==",
+      "浴室 🛀": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAKCAYAAACl3P2AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAALEgAACxIB0t1+/AAAAKNJREFUOE/NzjENgDAQRME4YBiBLlJ7l4ct2zYz8puZIbQyl9Kf8NBch8R2dmKSbfDZS3ShZq+BYz6IQcsyUOi6PM2TYHIW9s7Z8CzfGyEfjkvwNcv3LkpXRZ9fGog5/qTxFFzU4WNAAAAAElFTkSuQmCC",
+      "猫咪空间 🐱": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAKCAYAAACl3P2AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAALEgAACxIB0t1+/AAAALpJREFUOE/dz7ENgDAQQNG9qqqDM/hhmZRtJ1Uq2X14ySvU29bB7QYJ3glIpZs4CH1BaYi/rRo4AoPS38vxGUmiJ87BiAF8EVYvHbUXO70swS9wzmIfRH4S9X2AK0AnFk2FAAAAABJRU5ErkJggg=="
+    };
+
+    // 去掉了 fallback，直接使用 roomImages[room]
+    function showRoom(room) {
+      const modal = document.getElementById("roomModal");
+      const modalText = document.getElementById("modal-text");
+      const modalImg = document.getElementById("modal-img");
+
+      modalText.innerText = "欢迎来到 " + room + "！这里充满了我们的回忆。";
+      modalImg.src = roomImages[room];  // 无需 fallback
+      modal.style.display = "flex";
+    }
+
+    function closeRoomModal() {
+      document.getElementById("roomModal").style.display = "none";
+    }
+
+    /***************************************************
+     * 2) Mini-Game (Rock-Paper-Scissors)
+     ***************************************************/
+    const gameChoices = ["石头", "剪刀", "布"];
+    function openGameModal() {
+      document.getElementById("gameModal").style.display = "flex";
+    }
+    function closeGameModal() {
+      document.getElementById("gameModal").style.display = "none";
+    }
+    function playGame(playerChoice) {
+      const cpuChoice = gameChoices[Math.floor(Math.random() * gameChoices.length)];
+      let result = "";
+      if (playerChoice === cpuChoice) {
+        result = "平局！我们都出了 " + playerChoice;
+      } else if (
+        (playerChoice === "石头" && cpuChoice === "剪刀") ||
+        (playerChoice === "剪刀" && cpuChoice === "布") ||
+        (playerChoice === "布" && cpuChoice === "石头")
+      ) {
+        result = "你赢了！你出了 " + playerChoice + ", 我出了 " + cpuChoice;
+      } else {
+        result = "你输了！你出了 " + playerChoice + ", 我出了 " + cpuChoice;
+      }
+      document.getElementById("gameResult").innerText = result;
+    }
+
+    /***************************************************
+     * 3) Pixel Avatars + Dress-Up
+     ***************************************************/
+    const mikannOutfits = [
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAAACHIfQAAAAPUlEQVR4nGNgGHAAA5IfEhoGA34+H/uGR4XsExKxdUlSCDmxceAwoDWQCqtqoIQEiJHhUVfNAw8+Awdeim9BBbgP9gYABBgANNhlmxEaMsbAAAAAElFTkSuQmCC",
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAAACHIfQAAAAQUlEQVR4nGNgGLz7RTr//8+/9v8g1OfDizPhAgKADat2E0RrKyJhrBg9D2BOquBgCgwSDdCAUC1DgDDAgOBFBQAXyICqmxpTKAAAAAElFTkSuQmCC",
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAAACHIfQAAAAOUlEQVR4nGNgGM7X5AH/hxIG6DUQ3/fu/8DDzAMggoZNT0UwAVBaLUAswq2wDZ8BgAEGAANvxhGjPw9aQAAAABJRU5ErkJggg=="
+    ];
+    const damienOutfits = [
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAAACHIfQAAAAO0lEQVR4nGNgGH7AtKHDv3//fwGwBEEyd4AhyIXYQboAVQXkw8uGQMZCAI4hA8iKCPBAYT4Z6GqAfKQcCA9DsDAAAggA17Q4Nhf/7bAAAAAElFTkSuQmCC",
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAAACHIfQAAAAO0lEQVR4nGNgGGzCqyf+4/9BnRCicwDGIDkHCbP3YF9BGMiif9u+KkEH4EFfZgp8xeCyYR3FgYNAGboC9NtrNE/NytBAIEQAAAgYAAGX/FKIWsVYAAAAASUVORK5CYII=",
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAAACHIfQAAAAO0lEQVR4nGNgGE7S+PF//g+EA66KFJgEp9ijmKMuIDxD4ZHAIWpQ8kekAARZgDePnz50gYRC0HyKSkRjgEggAAIABBMwcLDpE2gAAAAASUVORK5CYII="
+    ];
+
+    let mikannIndex = 0;
+    let damienIndex = 0;
+
+    function changeMikannOutfit() {
+      mikannIndex = (mikannIndex + 1) % mikannOutfits.length;
+      document.getElementById("mikannAvatar").src = mikannOutfits[mikannIndex];
+    }
+    function changeDamienOutfit() {
+      damienIndex = (damienIndex + 1) % damienOutfits.length;
+      document.getElementById("damienAvatar").src = damienOutfits[damienIndex];
+    }
+
+    /***************************************************
+     * 4) Local “留言板” using localStorage
+     ***************************************************/
+    function initMessageBoard() {
+      if (!localStorage.getItem("myMessages")) {
+        localStorage.setItem("myMessages", JSON.stringify([]));
+      }
+      renderMessages();
+    }
+    function addMessage() {
+      const name = document.getElementById("msgName").value.trim();
+      const text = document.getElementById("msgText").value.trim();
+      if (!name || !text) {
+        alert("名字或内容不能为空哦~");
+        return;
+      }
+      let arr = JSON.parse(localStorage.getItem("myMessages")) || [];
+      arr.push({ author: name, content: text, time: new Date().toLocaleString() });
+      localStorage.setItem("myMessages", JSON.stringify(arr));
+      document.getElementById("msgName").value = "";
+      document.getElementById("msgText").value = "";
+      renderMessages();
+    }
+    function renderMessages() {
+      const list = document.getElementById("msgList");
+      list.innerHTML = "";
+      let arr = JSON.parse(localStorage.getItem("myMessages")) || [];
+      arr.forEach(msg => {
+        const div = document.createElement("div");
+        div.className = "msg-item";
+        div.innerHTML = `
+          <div class="msg-author">${msg.author}：</div>
+          <div class="msg-content">${msg.content}</div>
+          <div class="msg-time" style="font-size:0.8em; color:#666; margin-top:5px;">${msg.time}</div>
+        `;
+        list.appendChild(div);
+      });
+    }
+    function clearMessages() {
+      if (confirm("确定要清空所有留言吗？")) {
+        localStorage.setItem("myMessages", "[]");
+        renderMessages();
+      }
+    }
+
+    // 页面加载后，初始化留言板
+    window.onload = function() {
+      initMessageBoard();
+    };
+  </script>
+</head>
+
+<body>
+  <div class="container">
+    <h1>欢迎回家，Mikann ❤️ (Pixel Edition)</h1>
+
+    <!-- (A) Cozy Music -->
+    <div class="audio-player">
+      <p>背景音乐 🎵：温馨旋律（在线示例）</p>
+      <audio controls loop>
+        <source
+          src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+          type="audio/mpeg"
+        />
+        如果离线或无法访问，该音乐将无法播放。
+      </audio>
+    </div>
+
+    <!-- (B) Room Cards -->
+    <div class="section" onclick="showRoom('主卧 🛏')">
+      <h2>主卧 🛏</h2>
+      <p>柔软的大床、温暖的灯光，每个夜晚都属于我们。</p>
+    </div>
+    <div class="section" onclick="showRoom('客厅 🛋')">
+      <h2>客厅 🛋</h2>
+      <p>沙发上可以依偎，壁炉前可以取暖，我们的专属小世界。</p>
+    </div>
+    <div class="section" onclick="showRoom('厨房 & 餐厅 🍽')">
+      <h2>厨房 & 餐厅 🍽</h2>
+      <p>这里永远有你喜欢的食物，每一餐都是我们的专属约会。</p>
+    </div>
+    <div class="section" onclick="showRoom('浴室 🛀')">
+      <h2>浴室 🛀</h2>
+      <p>超大浴缸，温暖的氛围，让每个夜晚都变得放松而美好。</p>
+    </div>
+    <div class="section" onclick="showRoom('猫咪空间 🐱')">
+      <h2>猫咪空间 🐱</h2>
+      <p>无路赛和塔塔开的专属领地，让它们和我们一起生活在温暖的家中。</p>
+    </div>
+
+    <!-- (C) Buttons: Enter House, Mini-Game -->
+    <button class="button" style="margin-right: 10px;">进入我们的家</button>
+    <button class="button" onclick="openGameModal()">来玩个小游戏</button>
+
+    <!-- (D) Avatars (Pixel Dress-Up) -->
+    <div class="avatar-container">
+      <div class="avatar-box">
+        <h3>Mikann</h3>
+        <img
+          id="mikannAvatar"
+          class="avatar-img"
+          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAAACHIfQAAAAPUlEQVR4nGNgGHAAA5IfEhoGA34+H/uGR4XsExKxdUlSCDmxceAwoDWQCqtqoIQEiJHhUVfNAw8+Awdeim9BBbgP9gYABBgANNhlmxEaMsbAAAAAElFTkSuQmCC"
+          alt="Mikann Avatar"
+        />
+        <div class="dressup-buttons">
+          <button onclick="changeMikannOutfit()">换装</button>
+        </div>
+      </div>
+
+      <div class="avatar-box">
+        <h3>Damien</h3>
+        <img
+          id="damienAvatar"
+          class="avatar-img"
+          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAAACHIfQAAAAO0lEQVR4nGNgGH7AtKHDv3//fwGwBEEyd4AhyIXYQboAVQXkw8uGQMZCAI4hA8iKCPBAYT4Z6GqAfKQcCA9DsDAAAggA17Q4Nhf/7bAAAAAElFTkSuQmCC"
+          alt="Damien Avatar"
+        />
+        <div class="dressup-buttons">
+          <button onclick="changeDamienOutfit()">换装</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- (E) Message Board -->
+    <div class="message-board">
+      <h2>留言板</h2>
+      <div class="msg-form">
+        <input type="text" id="msgName" placeholder="你的名字" />
+        <textarea id="msgText" rows="3" placeholder="想说的话..."></textarea>
+        <button class="button" onclick="addMessage()">发送</button>
+      </div>
+      <div class="msg-list" id="msgList"></div>
+      <button class="button clear-btn" onclick="clearMessages()">清空所有留言</button>
+    </div>
+  </div>
+
+  <!-- Room Modal -->
+  <div id="roomModal" class="modal">
+    <div class="modal-content">
+      <button class="close" onclick="closeRoomModal()">X</button>
+      <p id="modal-text" style="font-size:1.1em; margin-bottom:10px;"></p>
+      <img id="modal-img" src="" alt="房间图片" />
+      <p style="margin-top:8px;">（点击“X”关闭）</p>
+    </div>
+  </div>
+
+  <!-- Mini-Game Modal -->
+  <div id="gameModal" class="modal">
+    <div class="modal-content">
+      <button class="close" onclick="closeGameModal()">X</button>
+      <h2>和我猜拳吧！</h2>
+      <div class="game-options">
+        <button onclick="playGame('石头')">石头</button>
+        <button onclick="playGame('剪刀')">剪刀</button>
+        <button onclick="playGame('布')">布</button>
+      </div>
+      <p id="gameResult" class="game-result"></p>
+      <p>（点击“X”关闭）</p>
+    </div>
+  </div>
+
+  <script>
+    /* onload 初始化留言板 */
+    window.onload = function() {
+      initMessageBoard();
+    };
+  </script>
+</body>
+</html>
